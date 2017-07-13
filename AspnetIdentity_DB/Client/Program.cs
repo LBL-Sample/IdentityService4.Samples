@@ -17,7 +17,7 @@ namespace Client
 
             await Task.Delay(5000);
             // discover endpoints from metadata
-            var disco = await DiscoveryClient.GetAsync("http://localhost:8657");
+            var disco = await DiscoveryClient.GetAsync("http://localhost:62114/");
 
             // request token
             var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
@@ -32,20 +32,20 @@ namespace Client
             Console.WriteLine(tokenResponse.Json);
             Console.WriteLine("\n\n");
 
-            //// call api
-            //var client = new HttpClient();
-            //client.SetBearerToken(tokenResponse.AccessToken);
+            // call api
+            var client = new HttpClient();
+            client.SetBearerToken(tokenResponse.AccessToken);
 
-            //var response = await client.GetAsync("http://localhost:5001/identity");
-            //if (!response.IsSuccessStatusCode)
-            //{
-            //    Console.WriteLine(response.StatusCode);
-            //}
-            //else
-            //{
-            //    var content = await response.Content.ReadAsStringAsync();
-            //    Console.WriteLine(JArray.Parse(content));
-            //}
+            var response = await client.GetAsync("http://localhost:62114/identity");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.StatusCode);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(JArray.Parse(content));
+            }
         }
     }
 }
